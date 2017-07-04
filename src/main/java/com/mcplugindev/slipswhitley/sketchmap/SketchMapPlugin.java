@@ -89,7 +89,7 @@ public class SketchMapPlugin extends JavaPlugin
                 + ChatColor.AQUA + "Original authors: SlipsWhitley & Fyrinlight"
                 + ChatColor.GREEN + "    |");
         SketchMapUtils.sendColoredConsoleMessage(ChatColor.GREEN + "|        "
-                + ChatColor.AQUA + "Updated and modified by Trainphreak"
+                + ChatColor.AQUA + "Updated and modified by Trainphreak and grzegorzekkk"
                 + ChatColor.GREEN + "        |");
         SketchMapUtils.sendColoredConsoleMessage(ChatColor.GREEN + "|                                                   |");
     }
