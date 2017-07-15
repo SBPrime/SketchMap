@@ -10,14 +10,13 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Set;
 import java.util.UUID;
 
@@ -44,8 +43,7 @@ public class SketchMapUtils
         BufferedImage image;
         try
         {
-            final BASE64Decoder decoder = new BASE64Decoder();
-            final byte[] imageByte = decoder.decodeBuffer(imageString);
+            final byte[] imageByte = Base64.getDecoder().decode(imageString);
             final ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
             image = ImageIO.read(bis);
             bis.close();
@@ -66,8 +64,7 @@ public class SketchMapUtils
         {
             ImageIO.write(image, type, bos);
             final byte[] imageBytes = bos.toByteArray();
-            final BASE64Encoder encoder = new BASE64Encoder();
-            imageString = encoder.encode(imageBytes);
+            imageString = Base64.getEncoder().encodeToString(imageBytes);
             bos.close();
         }
         catch (IOException e)
