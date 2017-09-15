@@ -143,6 +143,9 @@ public class SketchMapUtils
      */
     public static boolean checkAllowedMoreMaps(Player player)
     {
+        // Ops have unlimited maps
+        if(player.isOp()) return true;
+
         int ownedMaps = 0;
         for (final SketchMap map : SketchMap.getLoadedMaps())
         {
