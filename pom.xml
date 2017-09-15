@@ -38,6 +38,12 @@
             <artifactId>VaultAPI</artifactId>
             <version>1.4</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bukkit</artifactId>
+                    <groupId>org.bukkit</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
