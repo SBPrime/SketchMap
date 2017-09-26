@@ -41,9 +41,11 @@ public class SketchMapUtils
     public static BufferedImage base64StringToImg(final String imageString)
     {
         BufferedImage image;
+        String b64string;
         try
         {
-            final byte[] imageByte = Base64.getDecoder().decode(imageString);
+            b64string = imageString.replaceAll("\n", "");
+            final byte[] imageByte = Base64.getDecoder().decode(b64string);
             final ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
             image = ImageIO.read(bis);
             bis.close();
@@ -72,7 +74,7 @@ public class SketchMapUtils
             e.printStackTrace();
             return null;
         }
-        return imageString;
+        return imageString.replaceAll("(.{79})", "$1\n");
     }
 
     public static void sendColoredConsoleMessage(final String msg)
