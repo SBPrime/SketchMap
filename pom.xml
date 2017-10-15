@@ -6,7 +6,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>SketchMap</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.4.4</version>
 
     <repositories>
         <repository>
