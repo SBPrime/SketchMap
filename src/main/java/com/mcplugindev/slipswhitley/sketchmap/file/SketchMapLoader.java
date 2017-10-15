@@ -6,6 +6,7 @@ import com.mcplugindev.slipswhitley.sketchmap.SketchMapUtils;
 import com.mcplugindev.slipswhitley.sketchmap.map.SketchMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -47,27 +48,32 @@ public class SketchMapLoader
 
     public static void loadMaps()
     {
-        File[] listFiles = getMapsDirectory().listFiles();
-        int failed = 0;
-        for (int i = 0; i < listFiles.length; i++)
-        {
-            File file = listFiles[i];
-            if (file.getName().endsWith(".sketchmap"))
-            {
-                try
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                File[] listFiles = getMapsDirectory().listFiles();
+                int failed = 0;
+                for (int i = 0; i < listFiles.length; i++)
                 {
-                    SketchMapAPI.loadSketchMapFromFile(file);
+                    File file = listFiles[i];
+                    if (file.getName().endsWith(".sketchmap"))
+                    {
+                        try
+                        {
+                            SketchMapAPI.loadSketchMapFromFile(file);
+                        }
+                        catch (SketchMapFileException ex)
+                        {
+                            Bukkit.getLogger().log(Level.WARNING, ex.getMessage(), ex);
+                            failed++;
+                        }
+                    }
+                    if (i % 10 == 9)
+                        SketchMapUtils.sendColoredConsoleMessage(ChatColor.YELLOW + "[SketchMap] " + (i + 1 - failed) + "/" + listFiles.length + " sketchmaps loaded.");
                 }
-                catch (SketchMapFileException ex)
-                {
-                    Bukkit.getLogger().log(Level.WARNING, ex.getMessage(), ex);
-                    failed++;
-                }
+                SketchMapUtils.sendColoredConsoleMessage(ChatColor.YELLOW + "[SketchMap] Finished! " + (listFiles.length - failed) + " sketchmaps loaded");
             }
-            if (i % 10 == 9)
-                SketchMapUtils.sendColoredConsoleMessage(ChatColor.YELLOW + "[SketchMap] " + (i + 1 - failed) + "/" + listFiles.length + " sketchmaps loaded.");
-        }
-        SketchMapUtils.sendColoredConsoleMessage(ChatColor.YELLOW + "[SketchMap] Finished! " + (listFiles.length - failed) + " sketchmaps loaded");
+        }.runTaskAsynchronously(SketchMapPlugin.getPlugin());
     }
 
     public static void unloadMaps()
