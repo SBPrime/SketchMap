@@ -11,33 +11,28 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class PlayerListener implements Listener
-{
+public class PlayerListener implements Listener {
     @EventHandler
-    public void onPlayerInteract(final PlayerInteractEntityEvent event)
-    {
-        if (!(event.getRightClicked() instanceof ItemFrame))
-        {
+    public void onPlayerInteract(final PlayerInteractEntityEvent event) {
+        if (!(event.getRightClicked() instanceof ItemFrame)) {
             return;
         }
         final ItemFrame iFrame = (ItemFrame) event.getRightClicked();
         final ItemStack iHand = event.getPlayer().getItemInHand();
-        if (iHand.getType() != Material.MAP || iHand.getItemMeta() == null || iHand.getItemMeta().getLore() == null
-                || iHand.getItemMeta().getLore().isEmpty())
-        {
+        if (iHand.getType() != Material.MAP
+                || iHand.getItemMeta() == null
+                || iHand.getItemMeta().getLore() == null
+                || iHand.getItemMeta().getLore().isEmpty()) {
             return;
         }
         final String lore = iHand.getItemMeta().getLore().get(0);
-        if (!ChatColor.stripColor(lore).startsWith("SketchMap ID:"))
-        {
+        if (!ChatColor.stripColor(lore).startsWith("SketchMap ID:")) {
             return;
         }
-        if (iFrame.getItem().getType() != Material.AIR)
-        {
+        if (iFrame.getItem().getType() != Material.AIR) {
             return;
         }
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()) {
             return;
         }
         event.setCancelled(true);
@@ -48,12 +43,10 @@ public class PlayerListener implements Listener
         frameItem.setItemMeta(frameIMeta);
         iFrame.setItem(frameItem);
         final Player player = event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE)
-        {
+        if (player.getGameMode() == GameMode.CREATIVE) {
             return;
         }
-        if (iHand.getAmount() == 1)
-        {
+        if (iHand.getAmount() == 1) {
             player.getInventory().setItemInHand(new ItemStack(Material.AIR));
             return;
         }

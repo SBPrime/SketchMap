@@ -5,35 +5,29 @@ import com.mcplugindev.slipswhitley.sketchmap.command.SketchMapSubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-public class SubCommandReload extends SketchMapSubCommand
-{
+public class SubCommandReload extends SketchMapSubCommand {
     @Override
-    public String getSub()
-    {
+    public String getSub() {
         return "reload";
     }
 
     @Override
-    public String getPermission()
-    {
+    public String getPermission() {
         return "sketchmap.reload";
     }
 
     @Override
-    public String getDescription()
-    {
+    public String getDescription() {
         return "Reloads the plugin";
     }
 
     @Override
-    public String getSyntax()
-    {
+    public String getSyntax() {
         return "/sketchmap reload";
     }
 
     @Override
-    public void onCommand(final CommandSender sender, final String[] args, final String prefix)
-    {
+    public void onCommand(final CommandSender sender, final String[] args, final String prefix) {
         sender.sendMessage(ChatColor.DARK_PURPLE + prefix + "Reloading...");
         SketchMapPlugin.getPlugin().reload();
         sender.sendMessage(ChatColor.DARK_PURPLE + prefix + "Reload complete!");

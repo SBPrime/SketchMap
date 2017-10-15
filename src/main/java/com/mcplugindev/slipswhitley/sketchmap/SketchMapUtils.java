@@ -20,15 +20,12 @@ import java.util.Base64;
 import java.util.Set;
 import java.util.UUID;
 
-public class SketchMapUtils
-{
+public class SketchMapUtils {
     private static Permission permission;
 
-    public static BufferedImage resize(Image img, final Integer width, final Integer height)
-    {
+    public static BufferedImage resize(Image img, final Integer width, final Integer height) {
         img = img.getScaledInstance(width, height, 4);
-        if (img instanceof BufferedImage)
-        {
+        if (img instanceof BufferedImage) {
             return (BufferedImage) img;
         }
         final BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), 2);
@@ -38,66 +35,54 @@ public class SketchMapUtils
         return bimage;
     }
 
-    public static BufferedImage base64StringToImg(final String imageString)
-    {
+    public static BufferedImage base64StringToImg(final String imageString) {
         BufferedImage image;
         String b64string;
-        try
-        {
+        try {
             b64string = imageString.replaceAll("\n", "");
             final byte[] imageByte = Base64.getDecoder().decode(b64string);
             final ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
             image = ImageIO.read(bis);
             bis.close();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         return image;
     }
 
-    public static String imgToBase64String(final BufferedImage image, final String type)
-    {
+    public static String imgToBase64String(final BufferedImage image, final String type) {
         String imageString = null;
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try
-        {
+        try {
             ImageIO.write(image, type, bos);
             final byte[] imageBytes = bos.toByteArray();
             imageString = Base64.getEncoder().encodeToString(imageBytes);
             bos.close();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
         return imageString.replaceAll("(.{79})", "$1\n");
     }
 
-    public static void sendColoredConsoleMessage(final String msg)
-    {
+    public static void sendColoredConsoleMessage(final String msg) {
         final ConsoleCommandSender sender = Bukkit.getConsoleSender();
         sender.sendMessage(msg);
     }
 
-    protected static boolean setupPermissions()
-    {
-        final RegisteredServiceProvider<Permission> permissionProvider = (RegisteredServiceProvider<Permission>) Bukkit
-                .getServicesManager().getRegistration((Class) Permission.class);
-        if (permissionProvider != null)
-        {
+    protected static boolean setupPermissions() {
+        final RegisteredServiceProvider<Permission> permissionProvider =
+                (RegisteredServiceProvider<Permission>)
+                        Bukkit.getServicesManager().getRegistration((Class) Permission.class);
+        if (permissionProvider != null) {
             SketchMapUtils.permission = permissionProvider.getProvider();
         }
         return SketchMapUtils.permission != null;
     }
 
-    public static boolean hasPermission(final Player player, final String permission)
-    {
-        if (permission == null)
-        {
+    public static boolean hasPermission(final Player player, final String permission) {
+        if (permission == null) {
             return player.isOp();
         }
         return SketchMapUtils.permission.playerHas(player, permission);
@@ -105,31 +90,25 @@ public class SketchMapUtils
 
     /**
      * @param player The player to check the sketchmap size limit for.
-     * @param x      The X-dimension of the map being compared to the player's size limit.
-     * @param y      The Y-dimension of the map being compared to the player's size limit.
-     * @return Returns 0 if the map size is lower than the player's limit. Returns a positive number equal to the player's limit (from the config or permissions as applicable) if the map is larger than the player's limit.
+     * @param x The X-dimension of the map being compared to the player's size limit.
+     * @param y The Y-dimension of the map being compared to the player's size limit.
+     * @return Returns 0 if the map size is lower than the player's limit. Returns a positive number
+     *     equal to the player's limit (from the config or permissions as applicable) if the map is
+     *     larger than the player's limit.
      */
-    public static int checkSizeLimits(Player player, int x, int y)
-    {
-        if (player.isOp())
-            return 0;
+    public static int checkSizeLimits(Player player, int x, int y) {
+        if (player.isOp()) return 0;
 
         int largerDimension = Math.max(x, y);
-        if (hasPermission(player, "sketchmap.size.defaultexempt"))
-        {
-            for (int i = 1; i < largerDimension; i++)
-            {
-                if (hasPermission(player, "sketchmap.size." + i))
-                {
+        if (hasPermission(player, "sketchmap.size.defaultexempt")) {
+            for (int i = 1; i < largerDimension; i++) {
+                if (hasPermission(player, "sketchmap.size." + i)) {
                     return i;
                 }
             }
-        }
-        else
-        {
+        } else {
             int maxDim = SketchMapPlugin.getPlugin().getMaxDimension();
-            if (largerDimension > maxDim)
-            {
+            if (largerDimension > maxDim) {
                 return maxDim;
             }
         }
@@ -138,83 +117,70 @@ public class SketchMapUtils
     }
 
     /**
-     * Checks to see if a player owns fewer maps than they are allowed to own (by config or by perms)
+     * Checks to see if a player owns fewer maps than they are allowed to own (by config or by
+     * perms)
      *
      * @param player The player being checked
-     * @return True if the player's ownership limit is higher than the number of maps they currently own. False otherwise.
+     * @return True if the player's ownership limit is higher than the number of maps they currently
+     *     own. False otherwise.
      */
-    public static boolean checkAllowedMoreMaps(Player player)
-    {
+    public static boolean checkAllowedMoreMaps(Player player) {
         // Ops have unlimited maps
-        if(player.isOp()) return true;
+        if (player.isOp()) return true;
 
         int ownedMaps = 0;
-        for (final SketchMap map : SketchMap.getLoadedMaps())
-        {
-            if (map.getOwnerUUID().equals(player.getUniqueId()))
-                ownedMaps++;
+        for (final SketchMap map : SketchMap.getLoadedMaps()) {
+            if (map.getOwnerUUID().equals(player.getUniqueId())) ownedMaps++;
         }
 
         // If player is exempted from the default limit
-        if (hasPermission(player, "sketchmap.ownlimit.defaultexempt"))
-        {
-            // If player has a limit perm lower than or equal to their current number of maps, not allowed
-            for (int i = 1; i <= ownedMaps; i++)
-            {
-                if (hasPermission(player, "sketchmap.ownlimit." + i))
-                    return false;
+        if (hasPermission(player, "sketchmap.ownlimit.defaultexempt")) {
+            // If player has a limit perm lower than or equal to their current number of maps, not
+            // allowed
+            for (int i = 1; i <= ownedMaps; i++) {
+                if (hasPermission(player, "sketchmap.ownlimit." + i)) return false;
             }
         }
 
-            // If config has no default limit, allowed (note that the perms will override the config)
-        else if (SketchMapPlugin.getPlugin().getMaxOwnedMaps() == 0)
-        {
+        // If config has no default limit, allowed (note that the perms will override the config)
+        else if (SketchMapPlugin.getPlugin().getMaxOwnedMaps() == 0) {
             return true;
-        }
-        else
-        {
-            // If player owns maps greater than the default limit and there is an actual default limit, not allowed
+        } else {
+            // If player owns maps greater than the default limit and there is an actual default
+            // limit, not allowed
             if (SketchMapPlugin.getPlugin().getMaxOwnedMaps() != 0)
-                if (ownedMaps > SketchMapPlugin.getPlugin().getMaxOwnedMaps())
-                    return false;
+                if (ownedMaps > SketchMapPlugin.getPlugin().getMaxOwnedMaps()) return false;
         }
 
         // If nothing else, allowed
         return true;
     }
 
-    public static short getMapID(final MapView map)
-    {
+    public static short getMapID(final MapView map) {
         return map.getId();
     }
 
-    public static MapView getMapView(final short id)
-    {
+    public static MapView getMapView(final short id) {
         final MapView map = Bukkit.getMap(id);
-        if (map != null)
-        {
+        if (map != null) {
             return map;
         }
         return Bukkit.createMap(getDefaultWorld());
     }
 
-    public static Block getTargetBlock(final Player player, final int i)
-    {
+    public static Block getTargetBlock(final Player player, final int i) {
         return player.getTargetBlock((Set) null, i);
     }
 
-    public static World getDefaultWorld()
-    {
+    public static World getDefaultWorld() {
         return Bukkit.getWorlds().get(0);
     }
 
-    public static UUID nameToUUID(String name)
-    {
+    public static UUID nameToUUID(String name) {
         return Bukkit.getServer().getOfflinePlayer(name).getUniqueId();
     }
 
-    public static String uuidToName(UUID uuid)
-    {
+    public static String uuidToName(UUID uuid) {
         return Bukkit.getServer().getOfflinePlayer(uuid).getName();
     }
 }

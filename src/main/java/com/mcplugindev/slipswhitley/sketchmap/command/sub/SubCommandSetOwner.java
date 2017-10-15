@@ -11,54 +11,55 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class SubCommandSetOwner extends SketchMapSubCommand
-{
+public class SubCommandSetOwner extends SketchMapSubCommand {
     @Override
-    public String getSub()
-    {
+    public String getSub() {
         return "setowner";
     }
 
     @Override
-    public String getPermission()
-    {
+    public String getPermission() {
         return "sketchmap.privacy";
     }
 
     @Override
-    public String getDescription()
-    {
+    public String getDescription() {
         return "Sets the owner of a SketchMap";
     }
 
     @Override
-    public String getSyntax()
-    {
+    public String getSyntax() {
         return "/sketchmap setowner <MAP-ID> <NEW-OWNER-NAME>";
     }
 
     @Override
-    public void onCommand(final CommandSender sender, final String[] args, final String prefix)
-    {
-        if (args.length != 2)
-        {
-            sender.sendMessage(ChatColor.RED + prefix + "Error in Command Syntax. Try, \"" + this.getSyntax() + "\"");
+    public void onCommand(final CommandSender sender, final String[] args, final String prefix) {
+        if (args.length != 2) {
+            sender.sendMessage(
+                    ChatColor.RED
+                            + prefix
+                            + "Error in Command Syntax. Try, \""
+                            + this.getSyntax()
+                            + "\"");
             return;
         }
 
         SketchMap map = SketchMapAPI.getMapByID(args[0]);
-        if (map == null)
-        {
-            sender.sendMessage(ChatColor.RED + prefix + "Could not find Map \"" + args[0].toLowerCase() + "\"");
+        if (map == null) {
+            sender.sendMessage(
+                    ChatColor.RED
+                            + prefix
+                            + "Could not find Map \""
+                            + args[0].toLowerCase()
+                            + "\"");
             return;
         }
 
-        if (sender instanceof Player)
-        {
+        if (sender instanceof Player) {
             final Player player = (Player) sender;
 
-            if (!player.getUniqueId().equals(map.getOwnerUUID()) && !SketchMapUtils.hasPermission(player, "sketchmap.privacy.admin"))
-            {
+            if (!player.getUniqueId().equals(map.getOwnerUUID())
+                    && !SketchMapUtils.hasPermission(player, "sketchmap.privacy.admin")) {
                 player.sendMessage(ChatColor.RED + prefix + "You are not the owner of that map!");
                 return;
             }
@@ -66,11 +67,15 @@ public class SubCommandSetOwner extends SketchMapSubCommand
         map.addAllowedUUID(map.getOwnerUUID());
 
         UUID newOwnerUUID = SketchMapUtils.nameToUUID(args[1]);
-        if (map.getAllowedUUID().contains(newOwnerUUID))
-            map.removeAllowedUUID(newOwnerUUID);
+        if (map.getAllowedUUID().contains(newOwnerUUID)) map.removeAllowedUUID(newOwnerUUID);
 
         map.setOwnerUUID(newOwnerUUID);
-        sender.sendMessage(ChatColor.GREEN + prefix + Bukkit.getServer().getOfflinePlayer(newOwnerUUID).getName() + " is now the owner of map " + map.getID());
+        sender.sendMessage(
+                ChatColor.GREEN
+                        + prefix
+                        + Bukkit.getServer().getOfflinePlayer(newOwnerUUID).getName()
+                        + " is now the owner of map "
+                        + map.getID());
         map.save();
     }
 }

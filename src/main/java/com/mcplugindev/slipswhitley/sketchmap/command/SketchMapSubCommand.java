@@ -6,22 +6,10 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SketchMapSubCommand
-{
+public abstract class SketchMapSubCommand {
     private static List<SketchMapSubCommand> commands;
 
-    public abstract String getSub();
-
-    public abstract String getPermission();
-
-    public abstract String getDescription();
-
-    public abstract String getSyntax();
-
-    public abstract void onCommand(final CommandSender p0, final String[] p1, final String p2);
-
-    public static void loadCommands()
-    {
+    public static void loadCommands() {
         SketchMapSubCommand.commands = new ArrayList<>();
         loadCommand(new SubCommandCreate());
         loadCommand(new SubCommandDelete());
@@ -39,13 +27,21 @@ public abstract class SketchMapSubCommand
         loadCommand(new SubCommandGetMap());
     }
 
-    private static void loadCommand(final SketchMapSubCommand sub)
-    {
+    private static void loadCommand(final SketchMapSubCommand sub) {
         SketchMapSubCommand.commands.add(sub);
     }
 
-    public static List<SketchMapSubCommand> getCommands()
-    {
+    public static List<SketchMapSubCommand> getCommands() {
         return SketchMapSubCommand.commands;
     }
+
+    public abstract String getSub();
+
+    public abstract String getPermission();
+
+    public abstract String getDescription();
+
+    public abstract String getSyntax();
+
+    public abstract void onCommand(final CommandSender p0, final String[] p1, final String p2);
 }
