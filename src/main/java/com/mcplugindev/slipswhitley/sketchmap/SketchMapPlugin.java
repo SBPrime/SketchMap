@@ -101,11 +101,18 @@ public class SketchMapPlugin extends JavaPlugin {
                         + "    |");
         SketchMapUtils.sendColoredConsoleMessage(
                 ChatColor.GREEN
-                        + "|        "
+                        + "|    "
                         + ChatColor.AQUA
-                        + "Updated and modified by Trainphreak and grzegorzekkk"
+                        + "Updated and modified by Trainphreak,"
                         + ChatColor.GREEN
-                        + "        |");
+                        + "           |");
+        SketchMapUtils.sendColoredConsoleMessage(
+                ChatColor.GREEN
+                        + "|         "
+                        + ChatColor.AQUA 
+                        + "grzegorzekkk and SBPrime."
+                        + ChatColor.GREEN
+                        + "                 |");
         SketchMapUtils.sendColoredConsoleMessage(
                 ChatColor.GREEN + "|                                                   |");
     }

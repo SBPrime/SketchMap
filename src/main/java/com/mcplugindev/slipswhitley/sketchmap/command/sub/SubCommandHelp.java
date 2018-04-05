@@ -45,7 +45,15 @@ public class SubCommandHelp extends SketchMapSubCommand {
                         + ChatColor.GREEN
                         + " - Updated and modified by "
                         + ChatColor.GOLD
-                        + "Trainphreak");
+                        + "Trainphreak"
+                        + ChatColor.GREEN
+                        + ", "
+                        + ChatColor.GOLD
+                        + "grzegorzekkk"
+                        + ChatColor.GREEN
+                        + " & "
+                        + ChatColor.GOLD
+                        + "SBPrime");
         sender.sendMessage(
                 ChatColor.AQUA
                         + " SketchMap is a plugin designed to allow players to put images"

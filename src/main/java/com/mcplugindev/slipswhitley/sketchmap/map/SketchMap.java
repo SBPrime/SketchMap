@@ -7,6 +7,8 @@ import org.bukkit.map.MapView;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
+import org.bukkit.map.MapCanvas;
+import org.bukkit.map.MapPalette;
 
 public class SketchMap {
     private static Set<SketchMap> sketchMaps;
@@ -101,9 +103,13 @@ public class SketchMap {
     }
 
     private void initMap(final int x, final int y, final MapView mapView) {
-        final BufferedImage subImage = this.image.getSubimage(x * 128, y * 128, 128, 128);
-        mapView.getRenderers().stream().forEach(mapRenderer -> mapView.removeRenderer(mapRenderer));
-        mapView.addRenderer(new ImageRenderer(subImage));
+        final BufferedImage subImage = this.image.getSubimage(x * 128, y * 128, 128, 128);                
+
+        if (!NmsRenderer.setImage(mapView, subImage)) {
+            mapView.getRenderers().stream().forEach(mapRenderer -> mapView.removeRenderer(mapRenderer));
+            mapView.addRenderer(new ImageRenderer(subImage));
+        }
+        
         this.mapCollection.put(new RelativeLocation(x, y), mapView);
     }
 

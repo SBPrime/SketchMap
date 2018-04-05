@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>groupId</groupId>
-    <artifactId>SketchMap</artifactId>
-    <version>1.4.4</version>
+    <artifactId>SketchMap-Nms</artifactId>
+    <version>1.5.0</version>
 
     <repositories>
         <repository>

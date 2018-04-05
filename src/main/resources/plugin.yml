@@ -1,7 +1,7 @@
 name: SketchMap
-version: 1.4.4
+version: 1.5.0
 main: com.mcplugindev.slipswhitley.sketchmap.SketchMapPlugin
-softdepend: [ Vault ]
+depend: [ Vault ]
 commands:
   sketchmap:
     description: SketchMap Core Command
